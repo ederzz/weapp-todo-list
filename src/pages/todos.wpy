@@ -63,7 +63,6 @@
     }
 
     data = {
-      title: '这里是title',
       tapIndex: '',
       currentTab: 0,
       newDuty: ''
@@ -95,18 +94,6 @@
       }
     }
 
-    events = {
-      'some-event': () => {
-        console.log(222)
-        wepy.navigateTo({
-          url: '/pages/count/index',
-          success: function() {
-            console.log('成功跳转到count页面')
-          }
-        })
-      }
-    }
-
     onLoad() {
       wepy.showLoading({
         title: '加载中',
@@ -132,6 +119,14 @@
       'click-duty': (index) => {
         this.tapIndex = index
         this.$apply()
+      },
+      'goto-event': () => {
+        wepy.navigateTo({
+          url: '/pages/count/index',
+          success: function() {
+            console.log('成功跳转到count页面')
+          }
+        })
       }
     }
 

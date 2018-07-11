@@ -16,8 +16,7 @@
   export default class User extends wepy.component {
     methods = {
       gotoCount() {
-        console.log(111)
-        this.$emit('some-event')
+        this.$emit('goto-event')
       }
     }
   }

@@ -1,10 +1,10 @@
 <template>
   <view class="data-block">
     <view class="icon">
-      V
+      all
     </view>
     <view class="content">
-      已完成
+      总共
       <text class="amount">{{ count }}</text>
       个任务
     </view>
@@ -14,7 +14,7 @@
 <script>
   import wepy from 'wepy'
 
-  export default class Completed extends wepy.component {
+  export default class Total extends wepy.component {
     props = {
       count: Number
     }
@@ -31,7 +31,7 @@
       margin-top: 10px;
 
       .amount {
-        color: #0f0;
+        color: #00f;
         font-size: 22px;
       }
     }

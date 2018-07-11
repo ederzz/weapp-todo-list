@@ -1,7 +1,7 @@
 <template>
   <view class="home-page">
     <view class="topbar">
-      <user :userInfo.sync="userInfo" />
+      <user />
       <view class="tabs">
         <view class="tab-item {{ currentTab === 0 ? 'active' : '' }}" @tap="switchTab({{ 0 }})">全部任务</view>
         <view class="tab-item {{ currentTab === 1 ? 'active' : '' }}" @tap="switchTab({{ 1 }})">已完成</view>
@@ -65,7 +65,6 @@
     data = {
       title: '这里是title',
       tapIndex: '',
-      userInfo: null,
       currentTab: 0,
       newDuty: ''
     }
@@ -96,6 +95,18 @@
       }
     }
 
+    events = {
+      'some-event': () => {
+        console.log(222)
+        wepy.navigateTo({
+          url: '/pages/count/index',
+          success: function() {
+            console.log('成功跳转到count页面')
+          }
+        })
+      }
+    }
+
     onLoad() {
       wepy.showLoading({
         title: '加载中',
@@ -104,13 +115,6 @@
       /**
        * TODO: 抓取数据或者其他操作
        */
-      this.$parent.getUserInfo(userInfo => {
-        if (userInfo) {
-          this.userInfo = userInfo
-          this.$apply()
-        }
-      })
-
       setTimeout(() => {
         wepy.hideLoading()
       }, 1000 * Math.random())

@@ -1,0 +1,31 @@
+<template>
+  <view class="data-block">
+    <view class="icon">
+      V
+    </view>
+    <view>
+      已完成
+      <text class="amount">{{ count }}</text>
+      个
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Completed extends wepy.component {
+    props = {
+      count: Number
+    }
+  }
+</script>
+
+<style lang="less">
+  .data-block {
+    .amount {
+      color: #0f0;
+      font-size: 22px;
+    }
+  }
+</style>

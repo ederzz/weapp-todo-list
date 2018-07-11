@@ -1,8 +1,10 @@
 <template>
   <view class="user">
-    <view class="user-info">
-      <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
-      <text>{{ userInfo.nickName }}</text>
+    <view class="user-info" @tap="gotoCount">
+      <view class="userinfo-avatar">
+        <open-data type="userAvatarUrl"></open-data>
+      </view>
+      <open-data type="userNickName"></open-data>
     </view>
     <text class="app-name">Todo List</text>
   </view>
@@ -12,15 +14,11 @@
   import wepy from 'wepy'
 
   export default class User extends wepy.component {
-    data = {
-      userInfo: null
-    }
-
-    props = {
-      userInfo: Object
-    }
-
     methods = {
+      gotoCount() {
+        console.log(111)
+        this.$emit('some-event')
+      }
     }
   }
 </script>
@@ -32,17 +30,28 @@
     margin: 20rpx 0 32rpx;
     justify-content: space-between;
 
-    .userinfo-avatar {
-      border-radius: 50%;
-      width: 80rpx;
-      height: 80rpx;
-      margin-right: 20rpx;
-    }
-    
-    .app-name {
-      font-style: oblique;
-      font-size: 52rpx;
-      font-weight: 200;
+    .user-info {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+
+      .userinfo-avatar {
+        border-radius: 50%;
+        width: 80rpx;
+        height: 80rpx;
+        margin-right: 20rpx;
+        overflow: hidden;
+      }
+
+      .name {
+        width: 200rpx;
+      }
+      
+      .app-name {
+        font-style: oblique;
+        font-size: 52rpx;
+        font-weight: 200;
+      }
     }
   }
 </style>

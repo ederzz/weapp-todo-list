@@ -1,0 +1,60 @@
+<template>
+  <view class="todo-item {{ item.status }} {{ tapIndex === index ? 'active' : '' }}" @tap="handleTap({{ index }})">
+    <view class="item-status">
+      <text>{{ item.status === 'completed' ? 'V' : 'X' }}</text>
+    </view>
+    <view class="item-content">
+      <text>{{ item.content }}</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Duty extends wepy.component {
+    props = {
+      item: Object,
+      tapIndex: Number,
+      index: Number
+    }
+
+    methods = {
+      handleTap(index) {
+        // 通知父组件修改点击的任务
+        this.$emit('click-duty', index)
+      }
+    }
+  }
+</script>
+
+<style lang="less">
+  .todo-item {
+    width: 100%;
+    display: flex;
+    padding: 10rpx 0;
+
+    .item-content {
+      flex-grow: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .item-status {
+      margin-right: 10rpx;
+    }
+
+    &.active {
+      .item-content {
+        white-space: normal;
+      }
+    }
+  }
+
+  .completed {
+    .item-content {
+      text-decoration: line-through;
+      color: rgba(0, 0, 0, .5);
+    }
+  }
+</style>

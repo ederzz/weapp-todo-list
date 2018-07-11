@@ -1,0 +1,48 @@
+<template>
+  <view class="user">
+    <view class="user-info">
+      <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
+      <text>{{ userInfo.nickName }}</text>
+    </view>
+    <text class="app-name">Todo List</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class User extends wepy.component {
+    data = {
+      userInfo: null
+    }
+
+    props = {
+      userInfo: Object
+    }
+
+    methods = {
+    }
+  }
+</script>
+
+<style lang="less">
+  .user {
+    display: flex;
+    align-items: flex-end;
+    margin: 20rpx 0 32rpx;
+    justify-content: space-between;
+
+    .userinfo-avatar {
+      border-radius: 50%;
+      width: 80rpx;
+      height: 80rpx;
+      margin-right: 20rpx;
+    }
+    
+    .app-name {
+      font-style: oblique;
+      font-size: 52rpx;
+      font-weight: 200;
+    }
+  }
+</style>

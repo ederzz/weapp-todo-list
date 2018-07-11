@@ -1,0 +1,207 @@
+<template>
+  <view class="home-page">
+    <view class="topbar">
+      <user :userInfo.sync="userInfo" />
+      <view class="tabs">
+        <view class="tab-item {{ currentTab === 0 ? 'active' : '' }}" @tap="switchTab({{ 0 }})">全部任务</view>
+        <view class="tab-item {{ currentTab === 1 ? 'active' : '' }}" @tap="switchTab({{ 1 }})">已完成</view>
+        <view class="tab-item {{ currentTab === 2 ? 'active' : '' }}" @tap="switchTab({{ 2 }})">未完成</view>
+      </view>
+    </view>
+    <view class="todo-list" hidden="{{ currentTab === 0 ? false : true }}">
+      <repeat for="{{ allDuty }}" key="index" index="index" item="item">
+        <duty :index="index" :item="item" :tapIndex.sync="tapIndex"></duty>
+      </repeat>
+    </view>
+    <view class="todo-list" hidden="{{ currentTab === 1 ? false : true }}">
+      <repeat for="{{ completed }}" key="index" index="index" item="item">
+        <duty :index="index" :item="item" :tapIndex.sync="tapIndex"></duty>
+      </repeat>
+    </view>
+    <view class="todo-list" hidden="{{ currentTab === 2 ? false : true }}">
+      <repeat for="{{ uncompleted }}" key="index" index="index" item="item">
+        <duty :index="index" :item="item" :tapIndex.sync="tapIndex"></duty>
+      </repeat>
+    </view>
+    <view class="add-duty">
+      <input class="input" @input="input" value="{{newDuty}}" placeholder="添加任务" @blur="clear" type="text" name="duty" />
+      <view @tap="add" class="submit-btn">+</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+  import { addDuty } from '../store/actions'
+  import Duty from '@/components/duty'
+  import User from '@/components/user'
+
+  @connect({
+    allDuty: 'todoList',
+    completed(state) {
+      return state.todoList.filter(item => item.status === 'completed')
+    },
+    uncompleted(state) {
+      return state.todoList.filter(item => item.status === 'uncompleted')
+    }
+  }, {
+    addDuty
+  })
+
+  export default class Todos extends wepy.page {
+    config = {
+      navigationBarTitleText: 'todo-list',
+      navigationBarBackgroundColor: '#4044c0',
+      navigationBarTextStyle: 'white',
+      enablePullDownRefresh: false
+    }
+
+    components = {
+      duty: Duty,
+      user: User
+    }
+
+    data = {
+      title: '这里是title',
+      tapIndex: '',
+      userInfo: null,
+      currentTab: 0,
+      newDuty: ''
+    }
+
+    methods = {
+      switchTab(cur) {
+        wepy.showLoading({
+          title: '加载中',
+          mask: true
+        })
+        this.currentTab = cur
+        setTimeout(() => {
+          wepy.hideLoading()
+        }, 1000 * Math.random())
+      },
+      input(event) {
+        const {
+          detail: {
+            value
+          }
+        } = event
+        this.newDuty = value
+      },
+      add() {
+        // add duty and clear input value
+        this.methods.addDuty(this.newDuty)
+        this.newDuty = ''
+      }
+    }
+
+    onLoad() {
+      wepy.showLoading({
+        title: '加载中',
+        mask: true
+      })
+      /**
+       * TODO: 抓取数据或者其他操作
+       */
+      this.$parent.getUserInfo(userInfo => {
+        if (userInfo) {
+          this.userInfo = userInfo
+          this.$apply()
+        }
+      })
+
+      setTimeout(() => {
+        wepy.hideLoading()
+      }, 1000 * Math.random())
+    }
+
+    onPullDownRefresh(...args) {
+      console.log(args)
+      /**
+       * TODO: 下拉刷新操作
+       */
+      wepy.stopPullDownRefresh()
+    }
+
+    events = {
+      'click-duty': (index) => {
+        this.tapIndex = index
+        this.$apply()
+      }
+    }
+
+    getStatus = status => status === 'completed' ? 'V' : 'X'
+  }
+
+</script>
+
+<style lang="less">
+  @theme-color: #4044c0;
+
+  .home-page {
+    display: flex;
+    flex-direction: column;
+    padding: 0 20rpx;
+    font-family: 'Consolas';
+    padding-top: 200rpx;
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      background: #fff;
+      width: 710rpx;
+    }
+
+    .tabs {
+      display: flex;
+
+      .tab-item {
+        flex: 1;
+        text-align: center;
+
+        &.active {
+          border-bottom: 2px solid @theme-color;
+        }
+      }
+    }
+
+    .todo-list {
+      width: 100%;
+      padding-bottom: 200rpx;
+    }
+
+    .add-duty {
+      display: flex;
+      flex-direction: row;
+      position: fixed;
+      bottom: 0rpx;
+      padding-bottom: 20rpx;
+      width: calc(~"100% - 40rpx");
+      align-items: flex-end;
+      background: #fff;
+      box-shadow: 0px 00px 200rpx 100rpx #fff;
+
+      .input {
+        border-bottom: 2px solid #00f;
+        height: 60rpx;
+        flex: 1;
+        padding: 0 5rpx;
+      }
+
+      .submit-btn {
+        background: #00f;
+        color: #fff;
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+        line-height: 20px;
+        margin: 0 20rpx;
+        text-align: center;
+        border-radius: 2px;
+        font-weight: 200;
+        margin-bottom: 5px;
+      }
+    }
+  }
+</style>
